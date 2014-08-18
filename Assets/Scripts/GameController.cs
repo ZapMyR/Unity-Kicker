@@ -5,6 +5,8 @@ public class GameController : MonoBehaviour {
 	
 	public GameObject Player1;
 	public GameObject Player2;
+    public GameObject Ball;
+    
 
 	// Use this for initialization
 	void Start () {
