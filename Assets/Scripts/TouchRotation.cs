@@ -7,6 +7,7 @@ public class TouchRotation : MonoBehaviour
     public GameObject OutputObject;
 
     public Vector3 mouseDownStart;
+	public Vector3 outputObjectPositionStart;
     public bool isMouseDown;
 
 	// Use this for initialization
@@ -24,8 +25,19 @@ public class TouchRotation : MonoBehaviour
             }
             if (OutputObject != null && isMouseDown)
 	        {
-                var y = Input.mousePosition.y - mouseDownStart.y;
+                var y = Input.mousePosition.x - mouseDownStart.x;
+				var x = Input.mousePosition.y - mouseDownStart.y;
+				x = x / 10;
+				if (x > 7.8F)
+				{
+					x = 7.8F;
+				}
+				if (x < -7.8F)
+				{
+					x = -7.8F;
+				}
                 OutputObject.transform.Rotate(0, y, 0);
+				OutputObject.transform.position = new Vector3(outputObjectPositionStart.x - x, OutputObject.transform.position.y, OutputObject.transform.position.z); 
 	        }
 	    }
 	}
@@ -33,6 +45,7 @@ public class TouchRotation : MonoBehaviour
     void OnMouseDown()
     {
         mouseDownStart = Input.mousePosition;
+		outputObjectPositionStart = OutputObject.transform.position;
         isMouseDown = true;
     }
 }
