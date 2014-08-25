@@ -9,6 +9,9 @@ public class TouchRotation : MonoBehaviour
 
 	public float WallBoundary = 7.8F;
 
+	private Vector3 resetPos;
+	private Quaternion resetRot;
+
     private Vector3 mouseDownStart;
 	private float outputObjectPositionInit;
 	private float outputObjectPositionStart;
@@ -18,6 +21,8 @@ public class TouchRotation : MonoBehaviour
 	// Use this for initialization
 	void Start () {	
 		if (OutputObject != null) {
+			resetPos = OutputObject.transform.position;
+			resetRot = OutputObject.transform.rotation;
 						outputObjectPositionInit = OutputObject.transform.position.x;
 				}
 	}
@@ -72,6 +77,15 @@ public class TouchRotation : MonoBehaviour
 				Debug.Log("Unexpected");
 			}
 		}
+	}
+
+	public void ResetPosition()
+	{
+		OutputObject.transform.rotation = resetRot;
+		OutputObject.transform.position = resetPos;
+		
+		isMouseDown = false;
+		rotationApplied = 0;
 	}
 
 
