@@ -7,13 +7,19 @@ public class TouchRotation : MonoBehaviour
     public GameObject OutputObject;
 	public GameObject[] Figures;
 
+	public float WallBoundary = 7.8F;
+
     private Vector3 mouseDownStart;
-	private Vector3 outputObjectPositionStart;
+	private float outputObjectPositionInit;
+	private float outputObjectPositionStart;
     private bool isMouseDown;
 	private float rotationApplied;
 
 	// Use this for initialization
 	void Start () {	
+		if (OutputObject != null) {
+						outputObjectPositionInit = OutputObject.transform.position.x;
+				}
 	}
 		
 	// Update is called once per frame
@@ -25,29 +31,47 @@ public class TouchRotation : MonoBehaviour
                 isMouseDown = false;
 				rotationApplied = 0;
             }
-            if (OutputObject != null && isMouseDown)
+            else if (OutputObject != null)
 	        {
+				// bereits stattgefundenes delta
+				float currentObjectDelta = outputObjectPositionStart - outputObjectPositionInit;
+				// y delta maus
                 var y = Input.mousePosition.x - mouseDownStart.x;
+				// x delta maus
 				var x = Input.mousePosition.y - mouseDownStart.y;
 
+				// x dämpfung
 				x = x / 20;
 
+				// noch durchzuführende rotation = y delta maus - bereits stattgefundene rotation
 				var rotationTemp = y - rotationApplied;
+				// delta dieser mausbewegung = ausgangsposition + x delta maus
+				var movementToApply = outputObjectPositionStart - x;
+				// insgesamter versatz = delta dieser mausbewegung + bereits stattgefundenes delta
+				var movementTemp = movementToApply + currentObjectDelta;
 
-				if (x > 7.8F)
+				// "hit test" zwischen figuren und wänden
+				if (movementTemp > WallBoundary)
 				{
-					x = 7.8F;
+					movementTemp = WallBoundary;
 				}
-				if (x < -7.8F)
+				else if (movementTemp < 0-WallBoundary)
 				{
-					x = -7.8F;
+					movementTemp = 0-WallBoundary;
 				}
+
+				// anwendung der rotations- und positionsänderungen
 				OutputObject.transform.Rotate(0, 0 - rotationTemp, 0);
-				OutputObject.transform.position = new Vector3(outputObjectPositionStart.x - x, OutputObject.transform.position.y, OutputObject.transform.position.z); 
-				rotationApplied += rotationTemp;
+				OutputObject.transform.position = new Vector3(movementTemp, OutputObject.transform.position.y, OutputObject.transform.position.z); 
 
+				// merken des rotationsdeltas
+				rotationApplied += rotationTemp;
 	        }
-	    }
+			else
+			{				
+				Debug.Log("Unexpected");
+			}
+		}
 	}
 
 
@@ -55,7 +79,7 @@ public class TouchRotation : MonoBehaviour
     void OnMouseDown()
     {
         mouseDownStart = Input.mousePosition;
-		outputObjectPositionStart = OutputObject.transform.position;
+		outputObjectPositionStart = OutputObject.transform.position.x;
         isMouseDown = true;
     }
 
