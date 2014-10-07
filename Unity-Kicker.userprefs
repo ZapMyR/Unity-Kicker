@@ -1,12 +1,9 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\GameController.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\TouchRotation.cs">
     <Files>
-      <File FileName="Assets\Scripts\TouchRotation.cs" Line="117" Column="1" />
-      <File FileName="Assets\Scripts\FigureController.cs" Line="24" Column="2" />
-      <File FileName="Assets\Scripts\GameController.cs" Line="17" Column="17" />
-      <File FileName="Assets\Scripts\BallController.cs" Line="27" Column="5" />
-      <File FileName="Assets\Scripts\TouchRotation.cs" Line="34" Column="43" />
+      <File FileName="Assets\Scripts\TouchRotation.cs" Line="34" Column="26" />
+      <File FileName="..\..\..\..\..\Unity3DMultiplayerFPS\Assets\Scripts\Player\CharacterValues.cs" Line="76" Column="6" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

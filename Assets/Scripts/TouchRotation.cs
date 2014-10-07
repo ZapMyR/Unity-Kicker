@@ -12,10 +12,10 @@ public class TouchRotation : MonoBehaviour
 	private Vector3 resetPos;
 	private Quaternion resetRot;
 
-    private Vector3 mouseDownStart;
+	public Vector3 mouseDownStart;
 	private float outputObjectPositionInit;
 	private float outputObjectPositionStart;
-    private bool isMouseDown;
+    public bool isMouseDown;
 	private float rotationApplied;
 
 	// Use this for initialization
@@ -29,52 +29,51 @@ public class TouchRotation : MonoBehaviour
 		
 	// Update is called once per frame
 	void Update () {
-        if (isMouseDown)
-	    {
-            if (Input.GetMouseButtonUp(0))
-            {
-                isMouseDown = false;
-				rotationApplied = 0;
-            }
-            else if (OutputObject != null)
-	        {
-				// bereits stattgefundenes delta
-				float currentObjectDelta = outputObjectPositionStart - outputObjectPositionInit;
-				// y delta maus
-                var y = Input.mousePosition.x - mouseDownStart.x;
-				// x delta maus
-				var x = Input.mousePosition.y - mouseDownStart.y;
+		if (isMouseDown) {
+			if (Input.GetMouseButtonUp (0)) {
+					isMouseDown = false;
+					rotationApplied = 0;
+			} else if (OutputObject != null) {
+					// bereits stattgefundenes delta
+					float currentObjectDelta = outputObjectPositionStart - outputObjectPositionInit;
+					// y delta maus
+					var y = Input.mousePosition.x - mouseDownStart.x;
+					// x delta maus
+					var x = Input.mousePosition.y - mouseDownStart.y;
 
-				// x dämpfung
-				x = x / 20;
+					// x dämpfung
+					x = x / 20;
 
-				// noch durchzuführende rotation = y delta maus - bereits stattgefundene rotation
-				var rotationTemp = y - rotationApplied;
-				// delta dieser mausbewegung = ausgangsposition + x delta maus
-				var movementToApply = outputObjectPositionStart - x;
-				// insgesamter versatz = delta dieser mausbewegung + bereits stattgefundenes delta
-				var movementTemp = movementToApply + currentObjectDelta;
+					// noch durchzuführende rotation = y delta maus - bereits stattgefundene rotation
+					var rotationTemp = y - rotationApplied;
+					// delta dieser mausbewegung = ausgangsposition + x delta maus
+					var movementToApply = outputObjectPositionStart - x;
+					// insgesamter versatz = delta dieser mausbewegung + bereits stattgefundenes delta
+					var movementTemp = movementToApply + currentObjectDelta;
 
-				// "hit test" zwischen figuren und wänden
-				if (movementTemp > WallBoundary)
-				{
-					movementTemp = WallBoundary;
-				}
-				else if (movementTemp < 0-WallBoundary)
-				{
-					movementTemp = 0-WallBoundary;
-				}
+					// "hit test" zwischen figuren und wänden
+					if (movementTemp > WallBoundary) {
+							movementTemp = WallBoundary;
+					} else if (movementTemp < 0 - WallBoundary) {
+							movementTemp = 0 - WallBoundary;
+					}
 
-				// anwendung der rotations- und positionsänderungen
-				OutputObject.transform.Rotate(0, 0 - rotationTemp, 0);
-				OutputObject.transform.position = new Vector3(movementTemp, OutputObject.transform.position.y, OutputObject.transform.position.z); 
+					// anwendung der rotations- und positionsänderungen
+					OutputObject.transform.Rotate (0, 0 - rotationTemp, 0);
+					OutputObject.transform.position = new Vector3 (movementTemp, OutputObject.transform.position.y, OutputObject.transform.position.z); 
 
-				// merken des rotationsdeltas
-				rotationApplied += rotationTemp;
-	        }
-			else
-			{				
-				Debug.Log("Unexpected");
+					// merken des rotationsdeltas
+					rotationApplied += rotationTemp;
+			} else {				
+					Debug.Log ("Unexpected");
+			}
+		} else if (Input.GetMouseButtonDown (0)) {		
+			var ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+			RaycastHit hitInfo;
+			if (Physics.Raycast (ray, out hitInfo) && hitInfo.transform == OutputObject) {
+					mouseDownStart = Input.mousePosition;
+					outputObjectPositionStart = OutputObject.transform.position.x;
+					isMouseDown = true;
 			}
 		}
 	}
@@ -91,10 +90,13 @@ public class TouchRotation : MonoBehaviour
 
 
     void OnMouseDown()
-    {
-        mouseDownStart = Input.mousePosition;
-		outputObjectPositionStart = OutputObject.transform.position.x;
-        isMouseDown = true;
+	{
+		var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+		if (Physics.Raycast (ray)) {
+			mouseDownStart = Input.mousePosition;
+			outputObjectPositionStart = OutputObject.transform.position.x;
+			isMouseDown = true;
+		}
     }
 
 	void OnCollisionEnter(Collision c)
